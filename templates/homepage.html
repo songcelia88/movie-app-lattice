@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Movie Search App - Lattice{% endblock %}
+
+{% block content %}
+<style>
+
+</style>
+
+<!-- After the Jumbotron -->
+<div class="container" style="margin-top: 50px; margin-bottom: 80px">
+
+  <!-- Search Bar -->
+  <div class="row" style="">
+    <div class="col-sm-12" style="text-align: center">
+      <h3><a href="/">Movie Search App</a></h3>
+      <p>Search for a movie to find out more about it</p>
+      <form action="/search" method="GET" id="search-form">
+        <input class="form-control" type="text" name="keyword" placeholder="Keyword" style="margin: auto;width: 50%;display:inline">
+        <div style="padding-top: 10px;margin-bottom: 20px;display:inline">
+          <input type="submit" value="Search" class="btn btn-primary" style="padding:10px 30px;margin-bottom: 5px">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12" style="margin-top:20px;margin-bottom: 20px">
+      {% if searched %}
+        <h3>Search Results</h3>
+      {% else %}
+        <h3>Popular Movies</h3>
+      {% endif %}
+    </div>
+  </div>
+  
+  <!-- Search Results -->
+  <div class="row">
+    {% for movie in movies %}
+    <div class="col-md-4 movieCard">
+      {% if movie.poster_path %}
+        <a href="/movie/{{movie.id}}"><img src="{{ imgUrl + movie.poster_path }}" alt=""></img></a>
+      {% else %}
+        <img src="/static/img/cat-poster.png" alt=""></img>
+      {% endif %}
+      <div class="cardDetails">
+          <p class="movieTitle">
+            <a href="/movie/{{movie.id}}"><strong>{{ movie.title }}</strong></a>
+          </p>
+          <p class="releaseDate">{{ movie.release_date }}</p>
+          <p class="reviews"><i class="fas fa-star"></i>{{ movie.vote_average }}/10 ( {{movie.vote_count}} ) reviews</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+
+{% endblock %}
