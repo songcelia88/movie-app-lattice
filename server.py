@@ -15,7 +15,7 @@ API_KEY = os.environ.get('API_KEY')
 MOVIE_URL = "https://api.themoviedb.org/3"
 
 # get the basic configuration parameters especially for the image urls
-config_url = MOVIE_URL+"/configuration?api_key="+API_KEY+"butt"
+config_url = MOVIE_URL+"/configuration?api_key="+API_KEY
 config_resp = requests.get(config_url)
 config = config_resp.json()
 
