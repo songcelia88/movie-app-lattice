@@ -13,12 +13,13 @@
   <!-- Search Bar -->
   <div class="row" style="">
     <div class="col-sm-12" style="text-align: center">
-      <h3><a href="/">Movie Search App</a></h3>
+      <h3><a class="app-link" href="/">Movie Search App</a></h3>
       <p>Search for a movie to find out more about it</p>
       <form action="/search" method="GET" id="search-form">
-        <input class="form-control" type="text" name="keyword" placeholder="Keyword" style="margin: auto;width: 50%;display:inline">
+        <input class="form-control" type="text" name="keyword" id="keyword" placeholder="Keyword" style="margin: auto;width: 50%;display:inline">
+        <input type="hidden" name="page" value="1">
         <div style="padding-top: 10px;margin-bottom: 20px;display:inline">
-          <input type="submit" value="Search" class="btn btn-primary" style="padding:10px 30px;margin-bottom: 5px">
+          <input type="submit" value="Search" class="btn btn-primary" style="margin-bottom: 5px">
         </div>
       </form>
     </div>
@@ -28,9 +29,19 @@
     <div class="col-sm-12" style="margin-top:20px;margin-bottom: 20px">
       {% if searched %}
         <h3>Search Results</h3>
+        <div style="text-align: center">
+          <ul style="display:inline;list-style: none;">
+            <li class="pageLink" id="prevPage"><i class="fas fa-chevron-left"></i></li>
+            {% for num in range(totalPages) %}
+              <li class="pageLink pageNum" data-pagenum="{{ num+1 }}">{{ num+1 }}</li>
+            {% endfor %}
+            <li class="pageLink" id="nextPage"><i class="fas fa-chevron-right"></i></li>
+          </ul>
+        </div>
       {% else %}
         <h3>Popular Movies</h3>
       {% endif %}
+
     </div>
   </div>
   
@@ -38,17 +49,25 @@
   <div class="row">
     {% for movie in movies %}
     <div class="col-md-4 movieCard">
-      {% if movie.poster_path %}
-        <a href="/movie/{{movie.id}}"><img src="{{ imgUrl + movie.poster_path }}" alt=""></img></a>
-      {% else %}
+      <!-- Movie Image -->
+      <a href="/movie/{{movie.id}}">
+        {% if movie.poster_path %}
+        <img src="{{ imgUrl + movie.poster_path }}" alt=""></img>
+        {% else %}
         <img src="/static/img/cat-poster.png" alt=""></img>
-      {% endif %}
+        {% endif %}
+      </a>
+      <!-- Rest of the Details -->
       <div class="cardDetails">
           <p class="movieTitle">
-            <a href="/movie/{{movie.id}}"><strong>{{ movie.title }}</strong></a>
+            <a class="app-link" href="/movie/{{movie.id}}"><strong>{{ movie.title }}</strong></a>
           </p>
           <p class="releaseDate">{{ movie.release_date }}</p>
-          <p class="reviews"><i class="fas fa-star"></i>{{ movie.vote_average }}/10 ( {{movie.vote_count}} ) reviews</p>
+          <p class="reviews">
+            <i class="fas fa-star"></i>
+            <span style="font-size:20px">{{ movie.vote_average }}</span> /10 
+            <span style="font-weight: 300">({{movie.vote_count}} reviews)</span>
+          </p>
       </div>
     </div>
     {% endfor %}
@@ -56,5 +75,5 @@
 
 </div>
 
-
+<script src="static/search.js"></script>
 {% endblock %}

@@ -13,50 +13,78 @@
   <!-- -->
   <div class="row" style="">
     <div class="col-sm-12" style="text-align: center">
-      <h3><a href="/">Movie Search App</a></h3>
+      <h3><a class="app-link" href="/">Movie Search App</a></h3>
     </div>
   </div>
 
   <div class="row" style="margin-top: 40px">
     <div class="col-md-4">
+      {% if movie.poster_path %}
       <img class="movie-detail-img" src="{{ imgUrl + movie.poster_path }}">
+      {% else %}
+      <img class="movie-detail-img" src="/static/img/cat-poster.png">  
+      {% endif %}
     </div>
 
-    <div class="col-md-8">
-      <h2> {{ movie.title }} </h2>
-      <p> {{movie.release_date}} </p>
-      <p> {{movie.vote_average}}/10 ({{movie.vote_count}} reviews) </p>
-      {% for genre in movie.genres %}
-      <p> {{ genre.name }}</p>
-      {% endfor %}
+    <div class="col-md-8" style="padding-left: 20px;padding-right: 20px">
+      <h2> {{ movie.title }} 
+        <span style="color:#8c8c8c;font-size:25px;font-weight:300">({{movie.release_date[0:4]}})</span>
+      </h2>
+      <p class="movie-reviews" style="font-size:18px"> 
+        <i class="fas fa-star fa-2x" style="color:#E5B500"></i>
+        <span style="font-size:30px;font-weight: 800;">{{movie.vote_average}}</span>  /10 
+        <span style="font-weight: 300">({{movie.vote_count}} reviews) </span>
+      </p>
+      <p style="font-size:18px;margin-bottom: 25px"> Release Date: {{movie.release_date}} </p>
+      <div style="margin-bottom: 30px; margin-top: 15px">
+        {% for genre in movie.genres %}
+        <p class="movie-genre"> {{ genre.name }}</p>
+        {% endfor %}
+      </div>
       <h4>Overview: </h4>
       <p> {{movie.overview}} </p>
     </div>
   </div>
 
-  <div>
+  <div style="margin-top:30px">
     <h2>Main Cast</h2>
   </div>
 
-  <div class="row" style="margin-top: 20px">
-    <div class="col-md-3">
-      <img>
-    </div>
+  <div class="row" style="margin-top: 20px;text-align: center">
+    {% for actor in credits %}
+      <div class="col-md-3 col-sm-12">
+        {% if actor.profile_path %}
+        <img class="cast-img" style="height:250px" src="{{ profileImgUrl + actor.profile_path }}">
+        {% else %}
+        <img class="cast-img" style="height:250px" src="/static/img/cat-poster.png"> 
+        {% endif %}
+        
+        <p class="cast-actor">{{ actor.name }}</p>
+        <p class="cast-character">{{ actor.character }}</p>
+      </div>
+    {% endfor %}
+
   </div>
 
-  <div>
+  <div style="margin-top: 20px">
     <h2>Similar Movies</h2>
   </div>
 
-  <div class="row" style="margin-top: 20px">
-    <div class="col-md-3">
-      <img>
-    </div>
+  <div class="row" style="margin-top: 20px;text-align: center">
+    {% for movie in similar %}
+      <div class="col-md-3 col-sm-12">
+        {% if movie.poster_path %}
+        <img class="cast-img" style="height:250px" src="{{ imgUrl + movie.poster_path }}">
+        {% else %}
+        <img class="cast-img" style="height:250px" src="/static/img/cat-poster.png">  
+        {% endif %}
+        
+        <p class="cast-actor"><strong> {{ movie.title }} </strong></p>
+        <p class="cast-character">{{ movie.release_date }}</p>
+      </div>
+    {% endfor %}
   </div>
 
-  
-
 </div>
-
 
 {% endblock %}

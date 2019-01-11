@@ -20,6 +20,8 @@ config = requests.get(config_url)
 config = config.json()
 IMG_SIZE = 'w342'
 IMG_URL = config['images']['secure_base_url'] + IMG_SIZE
+PROFILE_IMG_SIZE = 'w185'
+PROFILE_IMG_URL = config['images']['secure_base_url'] + PROFILE_IMG_SIZE
 
 @app.route('/')
 def homepage():
@@ -44,11 +46,12 @@ def homepage():
 def search_page():
     """ Show the search results from the page """
     keyword = request.args.get('keyword')
+    page = request.args.get('page')
 
     payload = {
         'api_key': API_KEY,
         'query': keyword,
-        'page': 1
+        'page': page
     }
     endpoint_url = MOVIE_URL + "/search/movie"
     resp = requests.get(
@@ -56,25 +59,47 @@ def search_page():
         params=payload
         )
     results = resp.json()
+    # print(results)
 
-    return render_template("homepage.html", movies=results['results'], imgUrl=IMG_URL, searched=True)
+    return render_template("homepage.html", movies=results['results'], 
+        imgUrl=IMG_URL, searched=True, totalPages=results['total_pages'])
+
 
 @app.route('/movie/<movie_id>')
 def show_movie_details(movie_id):
     """ Show the details of the movie """
 
+    # get movie details
     payload = {
         'api_key': API_KEY,
     }
     endpoint_url = MOVIE_URL + "/movie/" + movie_id
-    resp = resp = requests.get(
+    resp = requests.get(
         endpoint_url,
         params=payload
     )
     results = resp.json()
-    print(results)
 
-    return render_template("movie-details.html", movie=results, imgUrl=IMG_URL)
+    # get movie cast (only the top 4 cast members)
+    credits_url = MOVIE_URL + "/movie/" + movie_id + "/credits"
+    credits_resp = requests.get(
+        credits_url,
+        params=payload
+    )
+    credits = credits_resp.json()
+
+    # get similar movies (only the top 4)
+    similar_url = MOVIE_URL + "/movie/" + movie_id + "/similar"
+    similar_resp = requests.get(
+        similar_url,
+        params=payload
+    )
+    similar = similar_resp.json()
+
+    return render_template("movie-details.html", movie=results, 
+        imgUrl=IMG_URL, profileImgUrl=PROFILE_IMG_URL, credits=credits['cast'][0:4],
+        similar=similar['results'][0:4])
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
