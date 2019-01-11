@@ -15,9 +15,16 @@ API_KEY = os.environ.get('API_KEY')
 MOVIE_URL = "https://api.themoviedb.org/3"
 
 # get the basic configuration parameters especially for the image urls
-config_url = MOVIE_URL+"/configuration?api_key="+API_KEY
-config = requests.get(config_url)
-config = config.json()
+config_url = MOVIE_URL+"/configuration?api_key="+API_KEY+"butt"
+config_resp = requests.get(config_url)
+config = config_resp.json()
+
+# handle case where API Key is invalid
+if config_resp.status_code != 200:
+    print(config_resp)
+    # print(config)
+    raise Exception(config['status_message'])
+
 IMG_SIZE = 'w342'
 IMG_URL = config['images']['secure_base_url'] + IMG_SIZE
 PROFILE_IMG_SIZE = 'w185'

@@ -2,7 +2,7 @@
 After setting up and activating your own local virtual environment, run the requirements.txt file with
 `pip3 install -r requirements.txt`
 
-Load the Movie DB API Key into the environment
+Load the Movie DB API Key into the environment:
 
 Create a secrets.sh file in the directory with the following line:
 `export API_KEY="XXXXXXXXXXXXX"`
